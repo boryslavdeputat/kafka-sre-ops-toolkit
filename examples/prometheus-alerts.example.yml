@@ -1,0 +1,18 @@
+# Example Prometheus-style alert rules (adapt to your exporter)
+groups:
+  - name: kafka-sre
+    rules:
+      - alert: KafkaConsumerLagHigh
+        expr: sum by (group) (kafka_consumergroup_lag) > 100000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Consumer lag high for {{ $labels.group }}"
+      - alert: KafkaUnderReplicated
+        expr: kafka_server_replicamanager_underreplicatedpartitions > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Under-replicated partitions > 0"
